@@ -32,27 +32,28 @@ func host():
 	if error == OK:
 		is_online = true
 	multiplayer.multiplayer_peer = multiplayer_peer
-	message_sent.emit(0, "Host = " + str(peer_get_id))
-	
+	message_send(3, "Host = " + str(peer_get_id()))
+	message_send.rpc(3, "Host = " + str(peer_get_id()))
 
 func join():
 	var error = multiplayer_peer.create_client(net_address, net_port)
 	if error == OK:
 		is_online = true
 	multiplayer.multiplayer_peer = multiplayer_peer
-	message_sent.emit(0, "Client = " + str(peer_get_id))
+	message_send(3, "Join = " + str(peer_get_id()))
+	message_send.rpc(3, "Join = " + str(peer_get_id()))
 
 @rpc("any_peer","reliable") func username_set(id, uname: String):
 	usernames[id] = uname
 
-@rpc("any_peer","reliable") func message_send(message: String):
-	messages += "\n" + message
+@rpc("any_peer","reliable") func message_send(type, message: String):
+	messages += "\n" + ["[color=GREEN]", "[color=YELLOW]","[color=white]"][type] + message + "[/color]"
 
 @rpc("any_peer","reliable") func player_spawn(peer_id = peer_get_id()):
-	var p = preload("res://actors/human/player/player.tscn")
+	var p = preload("res://actors/player/Player.tscn")
 	var player = p.instantiate()
 	player.peer_id = peer_id
-	add_child(player)
+	get_tree().current_scene.add_child(player)
 	players[peer_id] = player
 
 @rpc("any_peer","reliable") func player_spawn_others():
