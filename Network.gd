@@ -32,7 +32,7 @@ func host():
 	if error == OK:
 		is_online = true
 	multiplayer.multiplayer_peer = multiplayer_peer
-	message_sent.emit("Host = " + id_shorten(multiplayer_peer.get_unique_id()))
+	message_sent.emit(0, "Host = " + id_shorten(multiplayer_peer.get_unique_id()))
 	
 
 func join():
@@ -40,7 +40,7 @@ func join():
 	if error == OK:
 		is_online = true
 	multiplayer.multiplayer_peer = multiplayer_peer
-	message_sent.emit("Client = " + id_shorten(multiplayer_peer.get_unique_id()))
+	message_sent.emit(0, "Client = " + id_shorten(multiplayer_peer.get_unique_id()))
 
 @rpc("any_peer","reliable") func username_set(id, uname: String):
 	usernames[id] = uname
