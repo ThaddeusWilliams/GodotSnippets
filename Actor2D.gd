@@ -21,9 +21,6 @@ signal point_move_finish
 func _ready() -> void:
 	navigation_agent.velocity_computed.connect(Callable(_on_velocity_computed))
 
-func _process(delta):
-	body_parts.all(func(body_part: Game.BodyPart):body_part.update())
-
 func move_to(movement_target: Vector2):
 	navigation_agent.set_target_position(movement_target)
 
