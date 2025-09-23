@@ -2,27 +2,40 @@
 extends Node
 
 @onready var multiplayer_peer = ENetMultiplayerPeer.new()
+var player_scene : PackedScene = load("res://player/player_2d.tscn")
 
 const net_port = 3200
 const net_address = "localhost" # localhost
 var usernames = {}
-var players = {} ## Keeps track of all the player instances spawned
+var players : Dictionary[Variant, Node] = {} ## Keeps track of all the player instances spawned
 var messages = ""
-var variables = {}
+var variables : Dictionary[Variant, Variant] = {}
 var is_online = false
 
 signal message_sent(type: MessageType, text) ## For sending messages/notifications 
 enum MessageType {
-	MESSAGE_TYPE_SYSTEM, MESSAGE_TYPE_PLAYER
+	MESSAGE_TYPE_SYSTEM, MESSAGE_TYPE_PLAYER, MESSAGE_EXT1, MESSAGE_EXT2
 }
 
 func _ready():
 	multiplayer_peer.peer_disconnected.connect(_peer_disconnected)
 
+func _process(delta):
+	## Spawn update (spawns automatically if a player of that ID is NOT present)
+	for p in Network.multiplayer.get_peers():
+		if !players.keys().has(p):
+			var player = player_scene.instantiate()
+			get_tree().current_scene.add_child(player)
+			peer_id_assign(player, p)
+
 func _peer_disconnected(id):
 	players[id].queue_free()
 	if peer_get_id() == 1:
 		is_online = false
+		_host_server_closed()
+
+func _host_server_closed():
+	pass
 
 func _message_sent(type, text):
 	messages += text
@@ -43,22 +56,15 @@ func join():
 	message_send(3, "Join = " + str(peer_get_id()))
 	message_send.rpc(3, "Join = " + str(peer_get_id()))
 
+func peer_id_assign(node: Node2D, id):
+	node["peer_id"] = id
+	players[id] = node
+
 @rpc("any_peer","reliable") func username_set(id, uname: String):
 	usernames[id] = uname
 
 @rpc("any_peer","reliable") func message_send(type, message: String):
-	messages += "\n" + ["[color=GREEN]", "[color=YELLOW]","[color=white]"][type] + message + "[/color]"
-
-@rpc("any_peer","reliable") func player_spawn(peer_id = peer_get_id()):
-	var p = preload("res://actors/player/Player.tscn")
-	var player = p.instantiate()
-	player.peer_id = peer_id
-	get_tree().current_scene.add_child(player)
-	players[peer_id] = player
-
-@rpc("any_peer","reliable") func player_spawn_others():
-	for i in multiplayer.get_peers():
-		player_spawn(i)
+	messages += "\n" + ["[color=GREEN]", "[color=YELLOW]","[color=WHITE]","[color=RED]"][type] + message + "[/color]"
 
 @rpc("any_peer","unreliable") func node_properties_update(from: Node, to: Node, _only_use = []):
 	for property in from.get_property_list():
@@ -77,15 +83,14 @@ func join():
 @rpc("any_peer","unreliable") func _variable_set_unreliable(vid, value):
 	variables[vid] = value
 
-
-func variable_set(vid, value, _reliable = true):
+@rpc("any_peer","reliable") func variable_set(vid: Variant, value: Variant, _reliable := true):
 	variables[vid] = value
 	if _reliable:
 		_variable_set.rpc(vid, value)
 	else:
 		_variable_set_unreliable(vid, value)
 
-func variable_get(vid, _def = 0):
+@rpc("any_peer","reliable") func variable_get(vid: Variant, _def = 0):
 	if vid in variables:
 		return variables[vid]
 	return _def
