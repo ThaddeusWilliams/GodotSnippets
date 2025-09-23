@@ -23,15 +23,7 @@ func _physics_process(delta):
 		velocity = Input.get_vector("MoveLeft", "MoveRight", "MoveUp", "MoveDown") * speed * delta
 		move_and_slide()
 		Network.variable_set(str(peer_id) + ":position", position)
-		#Network.variable_set(str(peer_id) + ":frame", rig.get_node("%Body").frame)
-		#Network.variable_set(str(peer_id) + ":arm_front:angle", rig.get_node("%ArmFront").rotation)
-		#Network.variable_set(str(peer_id) + ":arm_back:angle", rig.get_node("%ArmBack").rotation)
-		#Network.variable_set(str(peer_id) + ":look_position", look_position)
 	else:
 		position = Network.variable_get(str(peer_id) + ":position", Vector2())
-		#rig.get_node("%Body").frame = Network.variable_get(str(peer_id) + ":frame")
-		#rig.get_node("%ArmFront").rotation = Network.variable_get(str(peer_id) + ":arm_front:angle")
-		#rig.get_node("%ArmBack").rotation = Network.variable_get(str(peer_id) + ":arm_back:angle")
-		#var look = Network.variable_get(str(peer_id) + ":look_position", Vector2())
-		#look_position = look
+		
 
