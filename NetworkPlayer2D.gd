@@ -8,7 +8,7 @@ func _process(delta):
 	is_player = (peer_id == Network.peer_get_id()) or !Network.is_online
 
 func _physics_process(delta):
-	%Label.text = "npeer id:"+str(Network.peer_get_id())+"\npeer id:" + str(peer_id) + "\ncount: "+str(Network.players.size()) +"\n"+ str(Network.multiplayer.get_peers())
+	##%Label.text = "npeer id:"+str(Network.peer_get_id())+"\npeer id:" + str(peer_id) + "\ncount: "+str(Network.players.size()) +"\n"+ str(Network.multiplayer.get_peers())
 	if !Network.is_online:
 		if Input.is_action_just_pressed("HOST"):
 			Network.host()
