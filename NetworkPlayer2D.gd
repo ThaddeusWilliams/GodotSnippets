@@ -8,7 +8,6 @@ func _ready():
 	#name = str(get_multiplayer_authority())
 	pass
 func _process(delta):
-	process_look()
 	is_player = peer_id == Network.peer_get_id() or !Network.is_online
 	$Label.text = str(peer_id)
 
