@@ -1,8 +1,9 @@
 ## ALWAYS LOAD IN "Globals"
-extends Node
+extends Node ## Main Network organizer
 
 @onready var multiplayer_peer = ENetMultiplayerPeer.new()
 var player_scene : PackedScene = load("res://player/player_2d.tscn")
+var max_clients = 32
 
 const net_port = 3200
 const net_address = "localhost" # localhost
@@ -41,7 +42,7 @@ func _message_sent(type, text):
 	messages += text
 
 func host():
-	var error = multiplayer_peer.create_server(net_port, 6)
+	var error = multiplayer_peer.create_server(net_port, max_clients)
 	if error == OK:
 		is_online = true
 	multiplayer.multiplayer_peer = multiplayer_peer
