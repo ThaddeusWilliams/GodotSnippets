@@ -6,7 +6,6 @@ extends CharacterBody3D
 var ai_destination : Vector3
 
 func _ready() -> void:
-	move_to(ai_destination)
 	navigation_agent.avoidance_enabled = true
 
 func move_to(movement_target: Vector3):
