@@ -1,13 +1,12 @@
 extends CharacterBody3D
 
-@export var ai_movement_speed: float = 4.0
+@export var ai_movement_speed: float = 194.0
 @onready var navigation_agent : NavigationAgent3D = add_node_parented(NavigationAgent3D.new())
 
 var ai_destination := Vector3()
 var ai_movement_enabled = false
 
 func _ready() -> void:
-	move_to(ai_destination)
 	navigation_agent.avoidance_enabled = true
 
 func move_to(movement_target: Vector3):
