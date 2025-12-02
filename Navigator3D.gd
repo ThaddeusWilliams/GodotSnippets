@@ -1,3 +1,4 @@
+class_name Navigator3D
 extends CharacterBody3D
 
 @export var ai_movement_speed: float = 194.0
