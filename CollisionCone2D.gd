@@ -15,9 +15,6 @@ func lengthdir_y(length, direction_degrees):
 	var radians = deg_to_rad(direction_degrees)  # Convert degrees to radians
 	return length * sin(radians)  # Calculate y coordinate
 
-func _init():
-	Game.draw.connect(_Game_draw)
-
 func _property_can_revert(property):
 	update()
 func update():
@@ -32,8 +29,5 @@ func update():
 	#set_point_cloud(_points)
 	polygon = _points
 	length_point.x = length
-	var s = Game.get_tree().current_scene
-	s.connect("draw", _Game_draw)
 
-func _Game_draw():
-	Game.draw_circle(length_point, 12, Color.CORAL)
+
