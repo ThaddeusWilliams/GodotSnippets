@@ -24,7 +24,7 @@ func update():
 		var x = lengthdir_x(length, i - angle / 2)
 		var y = lengthdir_y(length, i - angle / 2)
 		if i < angle:
-			if int(i) % spacing == 1:
+			if int(i) % spacing == 0:
 				_points.append(Vector2(x,y))
 	#set_point_cloud(_points)
 	polygon = _points
